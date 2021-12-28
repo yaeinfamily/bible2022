@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Yaein2022</title>
+    <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css">
+    <link rel="stylesheet" href="css/style.css">	
+	<script src="https://kit.fontawesome.com/c47106c6a7.js" crossorigin="anonymous"></script>
+	<script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+</head>
+<body>
+
+    <script type="text/javascript">
+        const DU = 'DeviceUser22';
+        const U1 = 'Other1_22';
+        const U2 = 'Other2_22';
+        const U3 = 'Other3_22';
+        const U4 = 'Other4_22';
+        const U5 = 'Other5_22';
+        const UNUM = 'UserCounter22';
+        const SN = 'SavedName22';
+        const AM = 'AddMode22';
+        var userNum = 0;
+        const ItemNumkeys = [DU, U1, U2, U3, U4, U5];
+        var ItemNums = [0,0,0,0,0];
+        const ItemNamekeys = ['N0', 'N1', 'N2', 'N3', 'N4', 'N5'];
+        var ItemNames = ['no', 'n1', 'n2', 'n3', 'n4', 'n5'];
+        var savedName = '다른 분';
+        var bModeAddword = 0;
+
+        var RedButtonCounter = 0;
+        var GreenButtonCounter = 0;
+                    
+        // Start process ------------------------[
+        init();
+        if(checkDone()) {
+            displayWord();
+        } else {
+            selectHandler();
+        }
+        
+        // Start process ------------------------]
+                
+        function init() {
+            if(localStorage.getItem(UNUM) !== null) {
+                userNum = parseInt(localStorage.getItem(UNUM));
+
+                //console.log("init userNum = " + userNum);
+                for(var n=0; n<userNum; n++) {
+                    ItemNums[n] = localStorage.getItem(ItemNumkeys[n]);
+                    ItemNames[n] = localStorage.getItem(ItemNamekeys[n]);
+                    //console.log("init n,Num,Name =" + n + " " + ItemNums[n] + " " + ItemNames[n]);
+                }
+            } else {
+                userNum = 0;
+                //console.log("init userNum = " + userNum);
+            }
+            
+            if(localStorage.getItem(AM) !== null) {
+                bModeAddword = parseInt(localStorage.getItem(AM));
+                savedName = localStorage.getItem(SN);
+            } else {
+                bModeAddword = 0;
+            }
+        }
+
+        function checkDone() {
+                //console.log("checkDone userNum, bModeAddword = " + userNum + " " + bModeAddword);
+                if(userNum === 0 || bModeAddword === 1 ) {
+                    localStorage.setItem(AM,0);
+                    //console.log("checkDone ret false");
+                    return false;
+                } else {
+                    //console.log("checkDone ret true");
+                    return true;
+                }
+            }
+
+        function selectHandler() {
+            var a = Math.floor(Math.random()*1000) % 455;
+            a = a + 1; // no 0.jpg
+            userNum = userNum + 1;
+            ItemNums[userNum-1] = a;
+            if(userNum === 1) { savedName = '[본인]';} // 첫 성구는 내 것.
+            ItemNames[userNum-1] = savedName;                
+            //console.log("selectHandler userNum = " + userNum);
+
+            displayWord();
+            saveLocalStorage();
+        }
+
+        function saveLocalStorage() {
+                //console.log("saveLocalStorage userNum = " + userNum);
+                localStorage.setItem(UNUM, userNum);
+                for(var n=0; n<userNum; n++) {
+                    localStorage.setItem(ItemNumkeys[n], ItemNums[n]);
+                    localStorage.setItem(ItemNamekeys[n], ItemNames[n]);
+                    //console.log("saveLocalStorage n,Num,Name =" + n + " " + ItemNums[n] + " " + ItemNames[n]);
+                }
+            }
+
+
+        function displayWord() {
+            const HTML_wrap = `
+                <!-- 페이징 버튼 -->
+                <div class="swiper-pagination"></div>
+                <div class="wrap">
+                    <div class="swiper-wrapper">
+                    ` 
+                    + makeMultiSlideDiv()
+                    + makeEndSlideDiv() 
+                    + `
+                    </div>
+                </div>
+            `;
+
+            document.write(HTML_wrap);
+        }
+
+        function makeSlideDiv(userName, fileNum) {
+            //console.log("makeSlideDiv : ",userName, fileNum);
+            return `
+            <div class="swiper-slide">
+                <div class="inner">
+                    <div class="con">
+                        <a href="jpg001/`+ fileNum +`.jpg"><img src="jpg001/`+fileNum+`.jpg"></a>
+                        <h2>...</h2>
+                        <p>`+ userName +` 성도님을 위한 새해 말씀카드</p>
+                    </div>
+                </div>
+            </div>
+            `;
+        }
+
+        function makeMultiSlideDiv(){
+            var multiSlideHTML = ``;
+            for(var n= userNum-1; n>=0; n--) {
+                multiSlideHTML += makeSlideDiv(ItemNames[n], ItemNums[n]);
+            }
+            //console.log(multiSlideHTML);
+            return multiSlideHTML;
+        }
+
+        function makeEndSlideDiv() {
+            return `
+            <div class="swiper-slide">
+                <div class="inner">
+                    <div class="con">
+                        <img class="add_new" src="card_black_add.png">
+                        <h2>...</h2>
+                        <p>다른 분을 위해 말씀카드를 더 뽑기 원하시면 눌러주세요.</p>
+                    </div>
+                </div>
+            </div>
+            `;
+        }
+
+        
+
+		const swiper = new Swiper('.wrap',{	
+			direction: "horizontal",
+			loop: false,
+			pagination: {
+				el: '.swiper-pagination',
+				type: 'fraction'
+			},	
+			navigation : {				
+				nextEl: '.swiper-button-next',
+				prevEl: '.swiper-button-prev',			
+			},
+			spaceBetween: 0,
+			slidesPerView: "auto",
+			grabCursor: true,
+			centeredSlides :true,
+			speed:1000,
+			effect:"coverflow",	
+			coverflowEffect: {
+				rotate: 50,
+				stretch: -100,
+				depth: 400,
+				modifier: 1,
+				slideShadows: false,
+			},
+		});
+
+        // Listeners
+        const addNew = document.querySelector(".add_new");
+		addNew.addEventListener("click",()=>{
+			
+            var savedName = prompt("말씀 받을 다른 분 성함을 입력해 주세요.");
+            //console.log("Enter addNew.addEventListener for " + savedName);
+            if(savedName === "") {
+                alert("이름을 입력해 주세요.");
+            } else if(savedName.toString() === "삭제") {
+                //console.log("OK. deleteMode for " + savedName);
+                deleteMode();
+            } else {
+                if(userNum < 6) {
+                    localStorage.setItem(SN, savedName);
+                    localStorage.setItem(AM,1);
+                    //console.log("OK. I will add new for " + savedName);
+                    location.href="index.html";
+                } else {
+                    alert("추가 5개를 다 받으셨어요!");
+                }
+                
+            }
+		});
+
+        function removeN(n) {
+            if(n < userNum) {
+                userNum = userNum - 1;
+                ItemNums.splice(n, 1);
+                ItemNames.splice(n, 1);
+                saveLocalStorage();
+            }
+            location.href="index.html";
+        }
+
+        function removeMy() { removeN(0); }
+        function removeWord1() { removeN(1); }
+        function removeWord2() { removeN(2); }
+        function removeWord3() { removeN(3); }
+        function removeWord4() { removeN(4); }
+        function removeWord5() { removeN(5); }
+
+        function writeCSSText() {
+            document.write("<style type='text/css'>");
+            document.write("* {margin:0px; padding:0px;}");
+            document.write("p {text-align: center; }"); // line-height: 0px; 
+            document.write("</style>");
+        }
+
+        function removeLocalStorageAll() {
+                localStorage.clear();
+                localStorage.setItem(UNUM, 0);
+                location.href="index.html";
+            }
+
+        function deleteMode() {
+            writeCSSText();
+            document.write("<p><br><br><input type='submit' value='전체삭제' onclick='removeLocalStorageAll()'><br><br>");
+            if(userNum>0) {
+                document.write(`<input type='submit' value='` + ItemNames[0] + ` 말씀 삭제' onclick='removeMy()'><br><br>`);
+            }
+            if(userNum>1) {
+                document.write(`<input type='submit' value='` + ItemNames[1] + ` 말씀 삭제' onclick='removeWord1()'><br><br>`);
+            }
+            if(userNum>2) {
+                document.write(`<input type='submit' value='` + ItemNames[2] + ` 말씀 삭제' onclick='removeWord2()'><br><br>`);
+            }
+            if(userNum>3) {
+                document.write(`<input type='submit' value='` + ItemNames[3] + ` 말씀 삭제' onclick='removeWord3()'><br><br>`);
+            }
+            if(userNum>4) {
+                document.write(`<input type='submit' value='` + ItemNames[4] + ` 말씀 삭제' onclick='removeWord4()'><br><br>`);
+            }
+            if(userNum>5) {
+                document.write(`<input type='submit' value='` + ItemNames[5] + ` 말씀 삭제' onclick='removeWord5()'></p>`);
+            }
+        }
+    </script>
+</body>
+</html>
