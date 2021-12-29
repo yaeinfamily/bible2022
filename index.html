@@ -87,7 +87,8 @@
 		init();
 		// Do this select.html when userNum == 0 or bModeAddword == 1 
 		if(userNum !== 0 && bModeAddword === 0 ) {
-			location.href="selected.html";
+			//location.href="selected.html";
+			location.replace("selected.html");
 		}
 
 		function init() {
@@ -156,8 +157,8 @@
 		cardsAni.addEventListener("click",()=>{
 			swiper.autoplay.stop();
 			//console.log("addEventListener - cardsAni");
-			location.href="selected.html";
-			
+			//location.href="selected.html";
+			location.replace("selected.html");
 		});
 	</script>	
 </body>

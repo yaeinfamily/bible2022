@@ -201,7 +201,8 @@
                     localStorage.setItem(SN, savedName);
                     localStorage.setItem(AM,1);
                     //console.log("OK. I will add new for " + savedName);
-                    location.href="index.html";
+                    //location.href="index.html";
+                    location.replace("index.html");
                 } else {
                     alert("추가 5개를 다 받으셨어요!");
                 }
@@ -216,7 +217,13 @@
                 ItemNames.splice(n, 1);
                 saveLocalStorage();
             }
-            location.href="index.html";
+
+            if(userNum == 0){
+                window.close();
+            } else {
+                //location.href="index.html";
+                location.replace("index.html"); // cannot go to prev page.
+            }
         }
 
         function removeMy() { removeN(0); }
@@ -236,7 +243,9 @@
         function removeLocalStorageAll() {
                 localStorage.clear();
                 localStorage.setItem(UNUM, 0);
-                location.href="index.html";
+                //location.href="index.html";
+                //location.replace("index.html"); // cannot go to prev page.
+                window.close();
             }
 
         function deleteMode() {
@@ -260,6 +269,11 @@
             if(userNum>5) {
                 document.write(`<input type='submit' value='` + ItemNames[5] + ` 말씀 삭제' onclick='removeWord5()'></p>`);
             }
+        }
+
+        // Check Key press
+        document.onkeypress = function(e) {
+            console.log("key code : " + e.keyCode);
         }
     </script>
 </body>
