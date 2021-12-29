@@ -219,6 +219,7 @@
             }
 
             if(userNum == 0){
+                alert("말씀이 모두 삭제되었습니다. 창닫기 버튼을 눌러 닫아주세요.");
                 window.close();
             } else {
                 //location.href="index.html";
@@ -241,12 +242,13 @@
         }
 
         function removeLocalStorageAll() {
-                localStorage.clear();
-                localStorage.setItem(UNUM, 0);
-                //location.href="index.html";
-                //location.replace("index.html"); // cannot go to prev page.
-                window.close();
-            }
+            localStorage.clear();
+            localStorage.setItem(UNUM, 0);
+            //location.href="index.html";
+            //location.replace("index.html"); // cannot go to prev page.
+            alert("말씀이 모두 삭제되었습니다. 창닫기 버튼을 눌러 닫아주세요.");
+            window.close();
+        }
 
         function deleteMode() {
             writeCSSText();
